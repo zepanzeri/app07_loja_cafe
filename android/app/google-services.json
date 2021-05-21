@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "982010442100",
+    "project_id": "app-loja-cafe-98286",
+    "storage_bucket": "app-loja-cafe-98286.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:982010442100:android:4bd4a6388401f9d9f13c21",
+        "android_client_info": {
+          "package_name": "com.example.app07_loja_cafe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "982010442100-01gnm7ejvreu9dovt43umv4akq5ot2v2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCVmrmfmMUb0eG5_W1LrGxL2DATKjvLBqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "982010442100-01gnm7ejvreu9dovt43umv4akq5ot2v2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
