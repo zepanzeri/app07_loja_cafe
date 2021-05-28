@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
+import 'criar_conta.dart';
+import 'login.dart';
 import 'model/Cafe.dart';
 
 Future<void> main() async {
@@ -11,10 +14,16 @@ Future<void> main() async {
 
   runApp(MaterialApp(
     debugShowCheckedModeBanner: false,
-    initialRoute: '/principal',
+    
+    initialRoute: '/login',
+
     routes: {
       '/principal': (context) => TelaPrincipal(),
       '/cadastro': (context) => TelaCadastro(),
+
+      '/login': (context) => TelaLogin(),
+      '/criar_conta': (context) => TelaCriarConta(),
+
     },
   ));
 
@@ -70,16 +79,17 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
             //
             // Apagar um documento
             //
-
-
+            cafes.doc(cafe.id).delete();
           },
         ),
+
+        onTap: (){
+          Navigator.pushNamed(context,'/cadastro', arguments:cafe.id);
+        },
 
       ),
     );
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -88,6 +98,15 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
         title: Text('Café Store'),
         centerTitle: true,
         backgroundColor: Colors.brown,
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: (){
+              FirebaseAuth.instance.signOut();
+              Navigator.pushReplacementNamed(context, '/login');
+            }
+          ),
+        ],
       ),
       backgroundColor: Colors.brown[50],
 
@@ -123,9 +142,7 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
                   }
                 );
 
-
             }
-            
           }
         ),
 
@@ -158,8 +175,31 @@ class _TelaCadastroState extends State<TelaCadastro> {
   var txtNome = TextEditingController();
   var txtPreco = TextEditingController();
 
+
+  // RECUPERAR um documento pelo ID
+  void getDocumentById(String id) async{
+
+    await FirebaseFirestore.instance
+      .collection('cafes').doc(id).get()
+      .then((valor) {
+        txtNome.text = valor.get('nome');
+        txtPreco.text = valor.get('preco');
+    });
+
+  }
+
   @override
   Widget build(BuildContext context) {
+
+    // RECUPERAR o ID do café
+    var id = ModalRoute.of(context)?.settings.arguments;
+
+    if ( id != null){
+      if (txtNome.text == '' && txtPreco.text == ''){
+        getDocumentById(id.toString());
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Café Store'),
@@ -197,7 +237,36 @@ class _TelaCadastroState extends State<TelaCadastro> {
                 width: 150,
                 child: OutlinedButton(
                   child: Text('salvar'),
-                  onPressed: () {},
+                  onPressed: () {
+
+                    var db = FirebaseFirestore.instance;
+
+                    if ( id == null){
+                      //
+                      // ADICIONAR um novo documento
+                      //
+                      db.collection('cafes').add(
+                        {
+                          'nome'  : txtNome.text,
+                          'preco' : txtPreco.text,
+                        }
+                      );
+                    }else{
+                      //
+                      // ATUALIZAR o documento
+                      //
+                      db.collection('cafes').doc(id.toString()).update(
+                        {
+                          'nome'  : txtNome.text,
+                          'preco' : txtPreco.text,
+                        }
+                      );
+                    }
+
+                    Navigator.pop(context);
+
+
+                  },
                 ),
               ),
               Container(

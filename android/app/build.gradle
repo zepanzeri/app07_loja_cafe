@@ -69,4 +69,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics'
     // firebase serviços utilizados - firestore
     implementation 'com.google.firebase:firebase-firestore'
+    // firebase serviços utilizados - authentication
+    implementation 'com.google.firebase:firebase-auth'
 }
